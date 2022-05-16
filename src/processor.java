@@ -109,7 +109,7 @@ class Arch extends JPanel{
             int columnCount = rammod.getColumnCount();
             for(int j=0;j<rowCount;j++){
                 backend.RAM[j]=backend.hexToDec(rammod.getValueAt(j,1).toString());
-                System.out.println(backend.RAM[j]);
+//                System.out.println(backend.RAM[j]);
             }
             updateRam();
         });
@@ -273,6 +273,17 @@ class Arch extends JPanel{
 
         } //register values
 
+        {
+            g2.drawRect(660,400,735-660,435-400);
+            g2.drawLine(697,400,697,435);
+            g2.setFont(new Font("Courier",Font.BOLD,20));
+            if(backend.z == 1) g2.setColor(Color.green);
+            else g2.setColor(Color.gray);
+            g2.drawString("Z",670,425);
+            if(backend.c == 1) g2.setColor(Color.green);
+            else g2.setColor(Color.gray);
+            g2.drawString("C",710,425);
+        }//flags
     }
 }
 class backend{
