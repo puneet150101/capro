@@ -31,6 +31,7 @@ class Arch extends JPanel{
     int t,ins;
     JButton test = new JButton("Initiate");
     JButton next = new JButton("next");
+    JButton updateRam = new JButton("<html>Update<br/>RAM</html>");
     JTextArea code = new JTextArea("mvi b,0x06\nmovab");
     JTable ramTab = new JTable();
     DefaultTableModel rammod;
@@ -59,6 +60,7 @@ class Arch extends JPanel{
 
         test.setBounds(420,520,100,30);
         next.setBounds(420,560,100,30);
+        updateRam.setBounds(420,600,100,45);
         code.setBounds(80,475,350-80,675-475);
         code.setLineWrap(true);
         add(code);
@@ -75,6 +77,7 @@ class Arch extends JPanel{
         next.setEnabled(false);
         add(next);
         add(test);
+        add(updateRam);
         test.addActionListener(ae->{
             reset();
             repaint();
@@ -91,7 +94,6 @@ class Arch extends JPanel{
             for(Integer ar: backend.sig)
                 sigs[ar] = Color.green;
             updateRam();
-
             repaint();
             t++;
             if(t==backend.time) {
@@ -100,6 +102,16 @@ class Arch extends JPanel{
                 t=0;
                 ins++;
             }
+        });
+        updateRam.addActionListener(ae->{
+            int rowCount = rammod.getRowCount();
+            System.out.println("here");
+            int columnCount = rammod.getColumnCount();
+            for(int j=0;j<rowCount;j++){
+                backend.RAM[j]=backend.hexToDec(rammod.getValueAt(j,1).toString());
+                System.out.println(backend.RAM[j]);
+            }
+            updateRam();
         });
     }
     public void reset(){
@@ -307,6 +319,8 @@ class backend{
 
     static int hexToDec(String hex) {
         //remove first two Character 0x
+        if (hex.length()>4)
+            return Integer.parseInt(hex.substring(2,4),16);
         return Integer.parseInt(hex.substring(2),16);
     }
     static String decToHex(int dec) {
