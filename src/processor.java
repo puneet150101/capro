@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class processor {
     public static void main(String[] args) {
@@ -34,7 +35,15 @@ class Arch extends JPanel{
     JButton next = new JButton("next");
     JButton updateRam = new JButton("<html>Update<br/>RAM</html>");
     JButton load = new JButton("Load");
-    JTextArea code = new JTextArea("mvia 0x06");
+    JTextArea code = new JTextArea("mvia 0x05\n" +
+            "mvic 0x02\n" +
+            "call 0x0B\n" +
+            "inra\n" +
+            "dcrc\n" +
+            "jnz 0x06\n" +
+            "hlt\n" +
+            "addac\n" +
+            "ret");
     JTable ramTab = new JTable();
     DefaultTableModel rammod;
     JScrollPane codeScroll;
@@ -89,9 +98,9 @@ class Arch extends JPanel{
             assem = code.getText().split("\n");
             total = assem.length;
             rec=true;
-            for(int i=0;i<256 && rec;i++){
-                if (backend.RAM[i]==2) {
-                    rec=false;
+            for(String e:assem){
+                if(e.trim().equals("hlt")){
+                    rec = false;
                 }
             }
             if(!rec){
@@ -104,6 +113,7 @@ class Arch extends JPanel{
             reset();
             repaint();
             t=0;
+            hexCode = backend.RAM[backend.pc];
             updateColors();
             System.out.println(ins);
         });
@@ -111,9 +121,6 @@ class Arch extends JPanel{
             reset();
             //System.out.println(t);
             //System.out.println(backend.time);
-
-            if(t==0){hexCode = backend.RAM[backend.pc];
-            }
             backend.executeCode(hexCode,t);
             for(Integer ar: backend.paths)
                 colors[ar] = Color.green;
@@ -124,7 +131,7 @@ class Arch extends JPanel{
             t++;
             if(t==backend.time) {
                 next.setEnabled(false);
-                t=0;
+
                 if(hexCode!=2) {
                     ins++;
                     init.setEnabled(true);
@@ -326,7 +333,7 @@ class Arch extends JPanel{
                 //System.out.println(assem[ins]);
                 g2.setColor(Color.darkGray);
                 g2.drawString("Current instruction:",600,505);
-                g2.drawString(assem[ins].toUpperCase(),600,535);
+                g2.drawString(backend.getInstruction(hexCode)+" clock cycle = "+t+"",600,535);
             }
         }//curr_ins+hlt check
 
@@ -381,10 +388,11 @@ class backend{
         for(int i = 0;i<INSTRUC.length;i++) {
             String[] parts = INSTRUC[i].trim().split("[\\s+|\\,]");
             int hex = instructionSet.get(parts[0]);
-            if(hex==2||hex==1||hex==15||hex==16||hex==23||hex==24||hex==17||hex==18||hex==19||hex==20||hex==21||hex==22||hex==0) {
+            if(hex==8||hex==2||hex==1||hex==15||hex==16||hex==23||hex==24||hex==17||hex==18||hex==19||hex==20||hex==21||hex==22||hex==0) {
                 RAM[itr++] = hex;
             }else {
                 RAM[itr++] = hex;
+                System.out.println(parts[0]);
                     RAM[itr++] = hexToDec(parts[1]);
             }
         }
@@ -393,6 +401,12 @@ class backend{
     static int hexToDec(String hex) {
         //remove first two Character 0x
         return Integer.parseInt(hex.substring(2),16);
+    }
+    static String getInstruction(int hexcode){
+        for(String e:instructionSet.keySet()){
+            if(instructionSet.get(e)==hexcode)return e.toUpperCase();
+        }
+            return " ";
     }
     static String decToHex(int dec) {
         return Integer.toHexString(dec);
@@ -418,7 +432,9 @@ class backend{
         instructionSet.put("dcra", 20);
         instructionSet.put("dcrb", 21);
         instructionSet.put("dcrc", 22);
-
+        instructionSet.put("cmp", 25);
+        instructionSet.put("lda", 26);
+        instructionSet.put("sta", 27);
     }
     private static void callmethod(int hexCode,int clock) {
         if(hexCode==1) {//mov
@@ -502,7 +518,18 @@ class backend{
             time = 3;
             hlt(clock);
         }
-
+        else if(hexCode==25){
+            time = 4;
+            cmp(clock);
+        }
+        else if(hexCode==26){
+            time = 6;
+            lda(clock);
+        }
+        else if(hexCode==27){
+            time = 6;
+            sta(clock);
+        }
     }
 
     static void hlt(int clock){
@@ -642,6 +669,66 @@ class backend{
             pc = TMP;
             sig = new ArrayList<>(Arrays.asList(16,1));
             paths = new ArrayList<>(Arrays.asList(2,10,12,13,0));
+        }
+    }
+    static void lda(int clock) {
+        if(clock==0){
+            mar =pc;
+            sig = new ArrayList<>(Arrays.asList(0,3,4));
+            paths = new ArrayList<>(Arrays.asList(0,1));
+        }else if(clock==1){
+            pc++;
+            IR = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(2,5,13));
+            paths = new ArrayList<>(Arrays.asList(2));
+        }
+        else if(clock==2){
+            mar = pc;
+            sig = new ArrayList<>(Arrays.asList(0,3,4));
+            paths = new ArrayList<>(Arrays.asList(0,1));
+        }else if(clock==3){
+            pc++;
+            TMP = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(2,5,17));
+            paths = new ArrayList<>(Arrays.asList(2,10));
+        }else if(clock==4){
+            mar = TMP;
+            sig = new ArrayList<>(Arrays.asList(16,3,4));
+            paths = new ArrayList<>(Arrays.asList(10,2,12,13,0,1));
+        }else if(clock==5){
+            A = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(19,5));
+            paths = new ArrayList<>(Arrays.asList(7,2));
+        }
+    }
+    static void sta(int clock) {
+        if(clock==0){
+            mar =pc;
+            sig = new ArrayList<>(Arrays.asList(0,3,4));
+            paths = new ArrayList<>(Arrays.asList(0,1));
+        }else if(clock==1){
+            pc++;
+            IR = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(2,5,13));
+            paths = new ArrayList<>(Arrays.asList(2));
+        }
+        else if(clock==2){
+            mar = pc;
+            sig = new ArrayList<>(Arrays.asList(0,3,4));
+            paths = new ArrayList<>(Arrays.asList(0,1));
+        }else if(clock==3){
+            pc++;
+            TMP = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(2,5,17));
+            paths = new ArrayList<>(Arrays.asList(2,10));
+        }else if(clock==4){
+            mar = TMP;
+            sig = new ArrayList<>(Arrays.asList(16,3,4));
+            paths = new ArrayList<>(Arrays.asList(10,2,12,13,0,1));
+        }else if(clock==5){
+            RAM[mar] = A;
+            sig = new ArrayList<>(Arrays.asList(18,6));
+            paths = new ArrayList<>(Arrays.asList(7,2));
         }
     }
     static void ret(int clock){
