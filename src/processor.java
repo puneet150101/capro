@@ -325,8 +325,8 @@ class Arch extends JPanel{
         {
             if(rec){
                 g2.setColor(Color.red);
-               g2.drawString("No halt found!",600,505);
-               g2.drawString("Halt needed!",600,535);
+                g2.drawString("No halt found!",600,505);
+                g2.drawString("Halt needed!",600,535);
             }
             else if (total>ins) {
 //                g2.setFont();
@@ -375,10 +375,10 @@ class backend{
 //            //System.out.println("instruction not present");
 //        }else {
 //            int hexCode = instructionSet.get(parts[0]);
-            if(hexCode==0) {
+        if(hexCode==0) {
 
-            }else
-                callmethod(hexCode,clock);
+        }else
+            callmethod(hexCode,clock);
 
 
     }
@@ -393,7 +393,7 @@ class backend{
             }else {
                 RAM[itr++] = hex;
                 System.out.println(parts[0]);
-                    RAM[itr++] = hexToDec(parts[1]);
+                RAM[itr++] = hexToDec(parts[1]);
             }
         }
 
@@ -406,7 +406,7 @@ class backend{
         for(String e:instructionSet.keySet()){
             if(instructionSet.get(e)==hexcode)return e.toUpperCase();
         }
-            return " ";
+        return " ";
     }
     static String decToHex(int dec) {
         return Integer.toHexString(dec);
@@ -489,7 +489,7 @@ class backend{
             time = 3;
             inra(clock);
         }
-      else if(hexCode==18) {
+        else if(hexCode==18) {
             time = 3;
             inrb(clock);
         }
@@ -583,9 +583,9 @@ class backend{
             paths = new ArrayList<>(Arrays.asList(0,1));
         }else{
             pc++;
-                A = RAM[mar];
-                sig = new ArrayList<>(Arrays.asList(5,19));
-                paths = new ArrayList<>(Arrays.asList(2,7));
+            A = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(5,19));
+            paths = new ArrayList<>(Arrays.asList(2,7));
         }
 
     }
@@ -606,9 +606,9 @@ class backend{
             paths = new ArrayList<>(Arrays.asList(0,1));
         }else{
             pc++;
-                B = RAM[mar];
-                sig = new ArrayList<>(Arrays.asList(5,12));
-                paths = new ArrayList<>(Arrays.asList(2,6));
+            B = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(5,12));
+            paths = new ArrayList<>(Arrays.asList(2,6));
         }
 
     }
@@ -629,9 +629,9 @@ class backend{
             paths = new ArrayList<>(Arrays.asList(0,1));
         }else{
             pc++;
-                C = RAM[mar];
-                sig = new ArrayList<>(Arrays.asList(5,15));
-                paths = new ArrayList<>(Arrays.asList(2,11));
+            C = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(5,15));
+            paths = new ArrayList<>(Arrays.asList(2,11));
         }
 
     }
@@ -807,73 +807,73 @@ class backend{
         }
     }
     static void addab(int clock) {
-            if(clock==0){
-                mar =pc;
-                sig = new ArrayList<>(Arrays.asList(0,3,4));
-                paths = new ArrayList<>(Arrays.asList(0,1));
-            }else if(clock==1){
-                pc++;
-                IR = RAM[mar];
-                sig = new ArrayList<>(Arrays.asList(2,5,13));
-                paths = new ArrayList<>(Arrays.asList(2));
-            }
-            else if(clock==2){
-                A = A+B;
-                sig = new ArrayList<>(Arrays.asList(18,19,11));
-                paths = new ArrayList<>(Arrays.asList(9,6,2,8));
-            }
+        if(clock==0){
+            mar =pc;
+            sig = new ArrayList<>(Arrays.asList(0,3,4));
+            paths = new ArrayList<>(Arrays.asList(0,1));
+        }else if(clock==1){
+            pc++;
+            IR = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(2,5,13));
+            paths = new ArrayList<>(Arrays.asList(2));
+        }
+        else if(clock==2){
+            A = A+B;
+            sig = new ArrayList<>(Arrays.asList(18,19,11));
+            paths = new ArrayList<>(Arrays.asList(9,6,2,8));
+        }
     }
     static void addac(int clock) {
-            if(clock==0){
-                mar =pc;
-                sig = new ArrayList<>(Arrays.asList(0,3,4));
-                paths = new ArrayList<>(Arrays.asList(0,1));
-            }else if(clock==1){
-                pc++;
-                IR = RAM[mar];
-                sig = new ArrayList<>(Arrays.asList(2,5,13));
-                paths = new ArrayList<>(Arrays.asList(2));
-            }
-            else if(clock==2){
-                A = A+C;
-                sig = new ArrayList<>(Arrays.asList(18,19,14));
-                paths = new ArrayList<>(Arrays.asList(9,11,2,8));
-            }
+        if(clock==0){
+            mar =pc;
+            sig = new ArrayList<>(Arrays.asList(0,3,4));
+            paths = new ArrayList<>(Arrays.asList(0,1));
+        }else if(clock==1){
+            pc++;
+            IR = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(2,5,13));
+            paths = new ArrayList<>(Arrays.asList(2));
+        }
+        else if(clock==2){
+            A = A+C;
+            sig = new ArrayList<>(Arrays.asList(18,19,14));
+            paths = new ArrayList<>(Arrays.asList(9,11,2,8));
+        }
     }
     static void subab(int clock) {
-            if(clock==0){
-                mar =pc;
-                sig = new ArrayList<>(Arrays.asList(0,3,4));
-                paths = new ArrayList<>(Arrays.asList(0,1));
-            }else if(clock==1){
-                pc++;
-                IR = RAM[mar];
-                sig = new ArrayList<>(Arrays.asList(2,5,13));
-                paths = new ArrayList<>(Arrays.asList(2));
-            }
-            else if(clock==2){
-                A = A-B;
-                sig = new ArrayList<>(Arrays.asList(18,19,11));
-                paths = new ArrayList<>(Arrays.asList(9,6,2,8));
-            }
+        if(clock==0){
+            mar =pc;
+            sig = new ArrayList<>(Arrays.asList(0,3,4));
+            paths = new ArrayList<>(Arrays.asList(0,1));
+        }else if(clock==1){
+            pc++;
+            IR = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(2,5,13));
+            paths = new ArrayList<>(Arrays.asList(2));
+        }
+        else if(clock==2){
+            A = A-B;
+            sig = new ArrayList<>(Arrays.asList(18,19,11));
+            paths = new ArrayList<>(Arrays.asList(9,6,2,8));
+        }
 
     }
     static void subac(int clock) {
-            if(clock==0){
-                mar =pc;
-                sig = new ArrayList<>(Arrays.asList(0,3,4));
-                paths = new ArrayList<>(Arrays.asList(0,1));
-            }else if(clock==1){
-                pc++;
-                IR = RAM[mar];
-                sig = new ArrayList<>(Arrays.asList(2,5,13));
-                paths = new ArrayList<>(Arrays.asList(2));
-            }
-            else if(clock==2){
-                A = A-C;
-                sig = new ArrayList<>(Arrays.asList(18,19,14));
-                paths = new ArrayList<>(Arrays.asList(9,11,2,8));
-            }
+        if(clock==0){
+            mar =pc;
+            sig = new ArrayList<>(Arrays.asList(0,3,4));
+            paths = new ArrayList<>(Arrays.asList(0,1));
+        }else if(clock==1){
+            pc++;
+            IR = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(2,5,13));
+            paths = new ArrayList<>(Arrays.asList(2));
+        }
+        else if(clock==2){
+            A = A-C;
+            sig = new ArrayList<>(Arrays.asList(18,19,14));
+            paths = new ArrayList<>(Arrays.asList(9,11,2,8));
+        }
 
     }
 
@@ -950,8 +950,8 @@ class backend{
             sig = new ArrayList<>(Arrays.asList(2,5,13));
             paths = new ArrayList<>(Arrays.asList(2));
         }else{
-                A++;
-                //System.out.println(A);
+            A++;
+            //System.out.println(A);
 //                sig = new ArrayList<>(Arrays.asList(18,19));
 //                paths = new ArrayList<>(Arrays.asList(9));
 
@@ -969,7 +969,7 @@ class backend{
             paths = new ArrayList<>(Arrays.asList(2));
         }else{
 
-                B++;
+            B++;
 //                sig = new ArrayList<>(Arrays.asList(18,19));
 //                paths = new ArrayList<>(Arrays.asList(9));
 
@@ -987,10 +987,10 @@ class backend{
             paths = new ArrayList<>(Arrays.asList(2));
         }else{
 
-                C++;
+            C++;
 //                sig = new ArrayList<>(Arrays.asList(18,19));
 //                paths = new ArrayList<>(Arrays.asList(9));
-            }
+        }
 
     }
     static void dcra( int clock) {
@@ -1011,42 +1011,42 @@ class backend{
 
         }
     }
-        static void dcrb(int clock){
-            if (clock == 0) {
-                mar = pc;
-                sig = new ArrayList<>(Arrays.asList(0, 3, 4));
-                paths = new ArrayList<>(Arrays.asList(0, 1));
-            } else if (clock == 1) {
-                pc++;
-                IR = RAM[mar];
-                sig = new ArrayList<>(Arrays.asList(2, 5, 13));
-                paths = new ArrayList<>(Arrays.asList(2));
-            } else {
-                B--;
-                if (B == 0) z = 1;
+    static void dcrb(int clock){
+        if (clock == 0) {
+            mar = pc;
+            sig = new ArrayList<>(Arrays.asList(0, 3, 4));
+            paths = new ArrayList<>(Arrays.asList(0, 1));
+        } else if (clock == 1) {
+            pc++;
+            IR = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(2, 5, 13));
+            paths = new ArrayList<>(Arrays.asList(2));
+        } else {
+            B--;
+            if (B == 0) z = 1;
 //                sig = new ArrayList<>(Arrays.asList(18,19));
 //                paths = new ArrayList<>(Arrays.asList(9));
 
-            }
         }
-            static void dcrc (int clock){
-                if (clock == 0) {
-                    mar = pc;
-                    sig = new ArrayList<>(Arrays.asList(0, 3, 4));
-                    paths = new ArrayList<>(Arrays.asList(0, 1));
-                } else if (clock == 1) {
-                    pc++;
-                    IR = RAM[mar];
-                    sig = new ArrayList<>(Arrays.asList(2, 5, 13));
-                    paths = new ArrayList<>(Arrays.asList(2));
-                } else {
+    }
+    static void dcrc (int clock){
+        if (clock == 0) {
+            mar = pc;
+            sig = new ArrayList<>(Arrays.asList(0, 3, 4));
+            paths = new ArrayList<>(Arrays.asList(0, 1));
+        } else if (clock == 1) {
+            pc++;
+            IR = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(2, 5, 13));
+            paths = new ArrayList<>(Arrays.asList(2));
+        } else {
 
-                    C--;
-                    if (C == 0) z = 1;
+            C--;
+            if (C == 0) z = 1;
 //                sig = new ArrayList<>(Arrays.asList(18,19));
 //                paths = new ArrayList<>(Arrays.asList(9));
 
-                }
-            }
         }
+    }
+}
 
