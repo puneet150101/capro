@@ -388,7 +388,7 @@ class backend{
         for(int i = 0;i<INSTRUC.length;i++) {
             String[] parts = INSTRUC[i].trim().split("[\\s+|\\,]");
             int hex = instructionSet.get(parts[0]);
-            if(hex==8||hex==2||hex==1||hex==15||hex==16||hex==23||hex==24||hex==17||hex==18||hex==19||hex==20||hex==21||hex==22||hex==0) {
+            if(hex==28||hex==29||hex==8||hex==2||hex==1||hex==15||hex==16||hex==23||hex==24||hex==17||hex==18||hex==19||hex==20||hex==21||hex==22||hex==0) {
                 RAM[itr++] = hex;
             }else {
                 RAM[itr++] = hex;
@@ -435,6 +435,8 @@ class backend{
         instructionSet.put("cmp", 25);
         instructionSet.put("lda", 26);
         instructionSet.put("sta", 27);
+        instructionSet.put("liab", 28);
+        instructionSet.put("siab", 29);
     }
     private static void callmethod(int hexCode,int clock) {
         if(hexCode==1) {//mov
@@ -529,6 +531,14 @@ class backend{
         else if(hexCode==27){
             time = 6;
             sta(clock);
+        }
+        else if(hexCode==28){
+            time = 4;
+            liab(clock);
+        }
+        else if(hexCode==29){
+            time = 4;
+            siab(clock);
         }
     }
 
@@ -699,6 +709,48 @@ class backend{
             A = RAM[mar];
             sig = new ArrayList<>(Arrays.asList(19,5));
             paths = new ArrayList<>(Arrays.asList(7,2));
+        }
+    }
+    static void liab(int clock) {
+        if(clock==0){
+            mar =pc;
+            sig = new ArrayList<>(Arrays.asList(0,3,4));
+            paths = new ArrayList<>(Arrays.asList(0,1));
+        }else if(clock==1){
+            pc++;
+            IR = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(2,5,13));
+            paths = new ArrayList<>(Arrays.asList(2));
+        }
+        else if(clock==2){
+            mar = B;
+            sig = new ArrayList<>(Arrays.asList(11,3,4));
+            paths = new ArrayList<>(Arrays.asList(6,2,12,13,0,1));
+        }else if(clock==3){
+            A = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(5,19));
+            paths = new ArrayList<>(Arrays.asList(2,7));
+        }
+    }
+    static void siab(int clock) {
+        if(clock==0){
+            mar =pc;
+            sig = new ArrayList<>(Arrays.asList(0,3,4));
+            paths = new ArrayList<>(Arrays.asList(0,1));
+        }else if(clock==1){
+            pc++;
+            IR = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(2,5,13));
+            paths = new ArrayList<>(Arrays.asList(2));
+        }
+        else if(clock==2){
+            mar = B;
+            sig = new ArrayList<>(Arrays.asList(0,3,4));
+            paths = new ArrayList<>(Arrays.asList(0,1));
+        }else if(clock==3){
+            RAM[mar]=A;
+            sig = new ArrayList<>(Arrays.asList(2,5,17));
+            paths = new ArrayList<>(Arrays.asList(2,10,6));
         }
     }
     static void sta(int clock) {
