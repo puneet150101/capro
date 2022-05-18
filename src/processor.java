@@ -58,7 +58,6 @@ class Arch extends JPanel{
         updateRam();
         setVisible(true);
         setLayout(null);
-        ins=0;
 
         setPreferredSize(new Dimension(1000,730));
         addMouseListener(new MouseAdapter() {
@@ -327,7 +326,7 @@ class Arch extends JPanel{
                 g2.drawString("No halt found!",600,505);
                 g2.drawString("Halt needed!",600,535);
             }
-            else if (total>ins) {
+            else  {
 //                g2.setFont();
                 //System.out.println(assem[ins]);
                 g2.setColor(Color.darkGray);
