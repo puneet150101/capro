@@ -131,7 +131,6 @@ class Arch extends JPanel{
             t++;
             if(t==backend.time) {
                 next.setEnabled(false);
-
                 if(hexCode!=2) {
                     ins++;
                     init.setEnabled(true);
@@ -190,7 +189,7 @@ class Arch extends JPanel{
             g2.drawRect(480,95,80,140-95);//tmp
             g2.drawRect(400,95,535-470,140-95);//c
             g2.drawRect(300,95,535-450,140-95);//stack-pointer
-            g2.drawRect(585,480,855-585,585-480);//curr_ins_block
+            g2.drawRect(615,480,855-615,575-480);//curr_ins_block
         }//blocks
 
         {
@@ -332,8 +331,14 @@ class Arch extends JPanel{
 //                g2.setFont();
                 //System.out.println(assem[ins]);
                 g2.setColor(Color.darkGray);
-                g2.drawString("Current instruction:",600,505);
-                g2.drawString(backend.getInstruction(hexCode)+" clock cycle = "+t+"",600,535);
+                g2.setFont(new Font("Courier",Font.BOLD,18));
+                g2.drawString("Current instruction",630,505);
+                g2.setColor(Color.gray);
+                g2.drawString(backend.getInstruction(hexCode),630,530);
+                g2.setColor(Color.darkGray);
+                g2.drawString("Clock Cycle:",630,555);
+                g2.setColor(Color.gray);
+                g2.drawString(""+t,750,555);
             }
         }//curr_ins+hlt check
 
