@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
-
 public class processor {
     public static void main(String[] args) {
         VisualFrame visualFrame = new VisualFrame();
@@ -392,7 +391,7 @@ class backend{
         for(int i = 0;i<INSTRUC.length;i++) {
             String[] parts = INSTRUC[i].trim().split("[\\s+|\\,]");
             int hex = instructionSet.get(parts[0]);
-            if(hex==28||hex==29||hex==8||hex==2||hex==1||hex==15||hex==16||hex==23||hex==24||hex==17||hex==18||hex==19||hex==20||hex==21||hex==22||hex==0) {
+            if(hex==38||hex==37||hex==36||hex==35||hex==34||hex==33||hex==32||hex==31||hex==30||hex==29||hex==28||hex==8||hex==2||hex==1||hex==15||hex==16||hex==23||hex==24||hex==17||hex==18||hex==19||hex==20||hex==21||hex==22||hex==0) {
                 RAM[itr++] = hex;
             }else {
                 RAM[itr++] = hex;
@@ -441,6 +440,15 @@ class backend{
         instructionSet.put("sta", 27);
         instructionSet.put("liab", 28);
         instructionSet.put("siab", 29);
+        instructionSet.put("movac", 30);
+        instructionSet.put("movba", 31);
+        instructionSet.put("movca", 32);
+        instructionSet.put("andb", 33);
+        instructionSet.put("andc", 34);
+        instructionSet.put("orb", 35);
+        instructionSet.put("orc", 36);
+        instructionSet.put("xorb", 37);
+        instructionSet.put("xorc", 38);
     }
     private static void callmethod(int hexCode,int clock) {
         if(hexCode==1) {//mov
@@ -544,6 +552,34 @@ class backend{
             time = 4;
             siab(clock);
         }
+        if(hexCode==30) {//mov
+            time = 3;
+            movAC(clock);
+        }if(hexCode==31) {//mov
+            time = 3;
+            movBA(clock);
+        }if(hexCode==32) {//mov
+            time = 3;
+            movCA(clock);
+        }if(hexCode==33) {//mov
+            time = 3;
+            andB(clock);
+        }if(hexCode==34) {//mov
+            time = 3;
+            andC(clock);
+        }if(hexCode==35) {//mov
+            time = 3;
+            orB(clock);
+        }if(hexCode==36) {//mov
+            time = 3;
+            orC(clock);
+        }if(hexCode==37) {//mov
+            time = 3;
+            xorB(clock);
+        }if(hexCode==38) {//mov
+            time = 3;
+            xorC(clock);
+        }
     }
 
     static void hlt(int clock){
@@ -577,6 +613,177 @@ class backend{
             A =B;
             sig = new ArrayList<>(Arrays.asList(11,19));
             paths = new ArrayList<>(Arrays.asList(6,2,7));
+        }
+    }
+    static void movAC(int clock) {
+        if(clock==0){
+            mar =pc;
+            sig = new ArrayList<>(Arrays.asList(0,3,4));
+            paths = new ArrayList<>(Arrays.asList(0,1));
+//	            RAM[0]=1;
+        }else if(clock==1){
+            pc++;
+            IR = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(2,5,13));
+            paths = new ArrayList<>(Arrays.asList(2));
+//	            RAM[1]=5;
+        }
+        else{
+            A =C;
+            sig = new ArrayList<>(Arrays.asList(14,19));
+            paths = new ArrayList<>(Arrays.asList(11,2,7));
+        }
+    }
+    static void movBA(int clock) {
+        if(clock==0){
+            mar =pc;
+            sig = new ArrayList<>(Arrays.asList(0,3,4));
+            paths = new ArrayList<>(Arrays.asList(0,1));
+//	            RAM[0]=1;
+        }else if(clock==1){
+            pc++;
+            IR = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(2,5,13));
+            paths = new ArrayList<>(Arrays.asList(2));
+//	            RAM[1]=5;
+        }
+        else{
+            B=A;
+            sig = new ArrayList<>(Arrays.asList(12,18));
+            paths = new ArrayList<>(Arrays.asList(6,2,7));
+        }
+    }
+    static void movCA(int clock) {
+        if(clock==0){
+            mar =pc;
+            sig = new ArrayList<>(Arrays.asList(0,3,4));
+            paths = new ArrayList<>(Arrays.asList(0,1));
+//	            RAM[0]=1;
+        }else if(clock==1){
+            pc++;
+            IR = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(2,5,13));
+            paths = new ArrayList<>(Arrays.asList(2));
+//	            RAM[1]=5;
+        }
+        else{
+            C=A;
+            sig = new ArrayList<>(Arrays.asList(15,18));
+            paths = new ArrayList<>(Arrays.asList(11,2,7));
+        }
+    }
+    static void andB(int clock) {
+        if(clock==0){
+            mar =pc;
+            sig = new ArrayList<>(Arrays.asList(0,3,4));
+            paths = new ArrayList<>(Arrays.asList(0,1));
+//	            RAM[0]=1;
+        }else if(clock==1){
+            pc++;
+            IR = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(2,5,13));
+            paths = new ArrayList<>(Arrays.asList(2));
+//	            RAM[1]=5;
+        }
+        else{
+            A = A&B;
+            sig = new ArrayList<>(Arrays.asList(18,19,11));
+            paths = new ArrayList<>(Arrays.asList(6,2,8,9));
+        }
+    }
+    static void andC(int clock) {
+        if(clock==0){
+            mar =pc;
+            sig = new ArrayList<>(Arrays.asList(0,3,4));
+            paths = new ArrayList<>(Arrays.asList(0,1));
+//	            RAM[0]=1;
+        }else if(clock==1){
+            pc++;
+            IR = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(2,5,13));
+            paths = new ArrayList<>(Arrays.asList(2));
+//	            RAM[1]=5;
+        }
+        else{
+            A = A&C;
+            sig = new ArrayList<>(Arrays.asList(18,19,14));
+            paths = new ArrayList<>(Arrays.asList(11,2,8,9));
+        }
+    }
+    static void orB(int clock) {
+        if(clock==0){
+            mar =pc;
+            sig = new ArrayList<>(Arrays.asList(0,3,4));
+            paths = new ArrayList<>(Arrays.asList(0,1));
+//	            RAM[0]=1;
+        }else if(clock==1){
+            pc++;
+            IR = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(2,5,13));
+            paths = new ArrayList<>(Arrays.asList(2));
+//	            RAM[1]=5;
+        }
+        else{
+            A = A|B;
+            sig = new ArrayList<>(Arrays.asList(18,19,11));
+            paths = new ArrayList<>(Arrays.asList(6,2,8,9));
+        }
+    }
+    static void orC(int clock) {
+        if(clock==0){
+            mar =pc;
+            sig = new ArrayList<>(Arrays.asList(0,3,4));
+            paths = new ArrayList<>(Arrays.asList(0,1));
+//	            RAM[0]=1;
+        }else if(clock==1){
+            pc++;
+            IR = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(2,5,13));
+            paths = new ArrayList<>(Arrays.asList(2));
+//	            RAM[1]=5;
+        }
+        else{
+            A = A|C;
+            sig = new ArrayList<>(Arrays.asList(18,19,14));
+            paths = new ArrayList<>(Arrays.asList(11,2,8,9));
+        }
+    }
+    static void xorB(int clock) {
+        if(clock==0){
+            mar =pc;
+            sig = new ArrayList<>(Arrays.asList(0,3,4));
+            paths = new ArrayList<>(Arrays.asList(0,1));
+//	            RAM[0]=1;
+        }else if(clock==1){
+            pc++;
+            IR = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(2,5,13));
+            paths = new ArrayList<>(Arrays.asList(2));
+//	            RAM[1]=5;
+        }
+        else{
+            A = A^B;
+            sig = new ArrayList<>(Arrays.asList(18,19,11));
+            paths = new ArrayList<>(Arrays.asList(6,2,8,9));
+        }
+    }
+    static void xorC(int clock) {
+        if(clock==0){
+            mar =pc;
+            sig = new ArrayList<>(Arrays.asList(0,3,4));
+            paths = new ArrayList<>(Arrays.asList(0,1));
+//	            RAM[0]=1;
+        }else if(clock==1){
+            pc++;
+            IR = RAM[mar];
+            sig = new ArrayList<>(Arrays.asList(2,5,13));
+            paths = new ArrayList<>(Arrays.asList(2));
+//	            RAM[1]=5;
+        }
+        else{
+            A = A^C;
+            sig = new ArrayList<>(Arrays.asList(18,19,14));
+            paths = new ArrayList<>(Arrays.asList(11,2,8,9));
         }
     }
     static void mvia(int clock){
